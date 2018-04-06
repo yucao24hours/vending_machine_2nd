@@ -1,5 +1,5 @@
 class VendingMachine
-  ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000]
+  ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000].freeze
 
   def insert_money(money)
     return nil unless acceptable_money?(money)
