@@ -14,4 +14,11 @@ class VendingMachineTest < Minitest::Test
     assert @vending_machine.insert_money(500)
     assert @vending_machine.insert_money(1_000)
   end
+
+  def test_投入金額の総計を取得できること
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(50)
+
+    assert_equal @vending_machine.total_money_amount, 150
+  end
 end
