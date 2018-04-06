@@ -1,0 +1,2 @@
+inherit_from:
+  - https://raw.githubusercontent.com/yucao24hours/rubocop_yml/master/.rubocop.yml
