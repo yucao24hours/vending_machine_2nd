@@ -7,11 +7,11 @@ class VendingMachineTest < Minitest::Test
     @vending_machine = VendingMachine.new
   end
 
-  def test_許容する金種が限られていること
-    assert @vending_machine.acceptable_money?(10)
-    assert @vending_machine.acceptable_money?(50)
-    assert @vending_machine.acceptable_money?(100)
-    assert @vending_machine.acceptable_money?(500)
-    assert @vending_machine.acceptable_money?(1_000)
+  def test_許容された金種のみ投入できること
+    assert @vending_machine.insert_money(10)
+    assert @vending_machine.insert_money(50)
+    assert @vending_machine.insert_money(100)
+    assert @vending_machine.insert_money(500)
+    assert @vending_machine.insert_money(1_000)
   end
 end
