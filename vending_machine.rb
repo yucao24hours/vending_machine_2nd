@@ -12,4 +12,11 @@ class VendingMachine
 
     @total_money_amount += money
   end
+
+  def refund
+    change = @total_money_amount
+    @total_money_amount = 0
+
+    change
+  end
 end
