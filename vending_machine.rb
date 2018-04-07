@@ -8,7 +8,7 @@ class VendingMachine
   end
 
   def insert_money(money)
-    return nil unless ACCEPTABLE_MONEY.include?(money)
+    return money unless ACCEPTABLE_MONEY.include?(money)
 
     @total_money_amount += money
   end

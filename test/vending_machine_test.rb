@@ -7,6 +7,16 @@ class VendingMachineTest < Minitest::Test
     @vending_machine = VendingMachine.new
   end
 
+  def test_許容されていない金種が投入されたら釣り銭として返すこと
+    assert_equal 1_00_00, @vending_machine.insert_money(1_00_00)
+  end
+
+  def test_許容されていない金種が投入されたら投入総額には加算しないこと
+    @vending_machine.insert_money(1_00_00)
+
+    assert_equal @vending_machine.total_money_amount, 0
+  end
+
   def test_許容された金種のみ投入できること
     assert @vending_machine.insert_money(10)
     assert @vending_machine.insert_money(50)
