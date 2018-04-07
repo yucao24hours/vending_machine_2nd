@@ -18,11 +18,20 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_許容された金種のみ投入できること
-    assert @vending_machine.insert_money(10)
-    assert @vending_machine.insert_money(50)
-    assert @vending_machine.insert_money(100)
-    assert @vending_machine.insert_money(500)
-    assert @vending_machine.insert_money(1_000)
+    @vending_machine.insert_money(10)
+    assert_equal 10, @vending_machine.total_money_amount
+
+    @vending_machine.insert_money(50)
+    assert_equal 60, @vending_machine.total_money_amount
+
+    @vending_machine.insert_money(100)
+    assert_equal 160, @vending_machine.total_money_amount
+
+    @vending_machine.insert_money(500)
+    assert_equal 660, @vending_machine.total_money_amount
+
+    @vending_machine.insert_money(1_000)
+    assert_equal 1_660, @vending_machine.total_money_amount
   end
 
   def test_投入金額の総計を取得できること
