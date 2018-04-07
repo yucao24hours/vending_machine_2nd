@@ -1,0 +1,8 @@
+inherit_from:
+  - https://raw.githubusercontent.com/yucao24hours/rubocop_yml/master/.rubocop.yml
+
+Naming/MethodName:
+  Enabled: false
+
+Naming/AsciiIdentifiers:
+  Enabled: false
