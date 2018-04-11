@@ -8,8 +8,8 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_初期状態でコーラを5つ格納できる
-    vending_machine = VendingMachine.new(stocks: [{name: "コーラ", price: 120, count: 5}])
-    assert_equal 5, vending_machine.stock_count
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
+    assert_equal 5, vending_machine.stocks['コーラ'][:count]
   end
 
   def test_許容されていない金種が投入されたら釣り銭として返すこと
