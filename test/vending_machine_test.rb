@@ -54,4 +54,10 @@ class VendingMachineTest < Minitest::Test
     assert_equal 1_600, @vending_machine.refund, 1_600
     assert_equal 0, @vending_machine.total_money_amount
   end
+
+  def test_格納されているジュースの情報を取得できる
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
+
+    assert_equal ({"コーラ" => {price: 120, count: 5}}), vending_machine.stocks
+  end
 end
