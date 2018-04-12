@@ -7,12 +7,17 @@ class VendingMachineTest < Minitest::Test
     @vending_machine = VendingMachine.new
   end
 
+  def test_初期状態でコーラを5つ格納できる
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
+    assert_equal 5, vending_machine.stocks['コーラ'][:count]
+  end
+
   def test_許容されていない金種が投入されたら釣り銭として返すこと
-    assert_equal 1_00_00, @vending_machine.insert_money(1_00_00)
+    assert_equal 10_000, @vending_machine.insert_money(10_000)
   end
 
   def test_許容されていない金種が投入されたら投入総額には加算しないこと
-    @vending_machine.insert_money(1_00_00)
+    @vending_machine.insert_money(10_000)
 
     assert_equal @vending_machine.total_money_amount, 0
   end
@@ -48,5 +53,11 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal 1_600, @vending_machine.refund, 1_600
     assert_equal 0, @vending_machine.total_money_amount
+  end
+
+  def test_格納されているジュースの情報を取得できる
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
+
+    assert_equal ({"コーラ" => {price: 120, count: 5}}), vending_machine.stocks
   end
 end
