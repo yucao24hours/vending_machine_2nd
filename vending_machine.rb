@@ -29,4 +29,8 @@ class VendingMachine
 
     change
   end
+
+  def can_buy?(drink_name)
+    true
+  end
 end
