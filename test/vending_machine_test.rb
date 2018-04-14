@@ -74,4 +74,13 @@ class VendingMachineTest < Minitest::Test
 
     refute vending_machine.can_buy?('コーラ')
   end
+
+  def test_在庫が足りていないが投入金額が足りている場合はfalseを返すこと
+    vending_machine = VendingMachine.new(stocks: nil)
+    vending_machine.insert_money(100)
+    vending_machine.insert_money(10)
+    vending_machine.insert_money(10)
+
+    refute vending_machine.can_buy?('コーラ')
+  end
 end
