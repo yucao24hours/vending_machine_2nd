@@ -31,6 +31,9 @@ class VendingMachine
   end
 
   def can_buy?(drink_name)
-    true
+    price = stocks[drink_name][:price]
+    count = stocks[drink_name][:count]
+
+    (total_money_amount >= price) && (count >= 1)
   end
 end
