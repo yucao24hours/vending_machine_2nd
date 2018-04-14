@@ -60,4 +60,11 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal ({"コーラ" => {price: 120, count: 5}}), vending_machine.stocks
   end
+
+  def test_在庫が足りており投入金額も足りている場合はtrueを返すこと
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
+    vending_machine.insert_money(500)
+
+    assert vending_machine.can_buy?('コーラ')
+  end
 end
