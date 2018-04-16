@@ -41,10 +41,10 @@ class VendingMachine
   private
 
   def can_buy?(drink_name)
-    return false unless stocks
+    return false unless @stocks
 
-    price = stocks[drink_name][:price]
-    count = stocks[drink_name][:count]
+    price = @stocks[drink_name][:price]
+    count = @stocks[drink_name][:count]
 
     (total_money_amount >= price) && (count >= 1)
   end
