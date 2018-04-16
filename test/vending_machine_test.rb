@@ -84,4 +84,26 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal 120, vending_machine.sales_amount
   end
+
+  def test_ジュースの値段以下の金額を投入されると、ジュースの在庫を減らさないこと
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    assert_equal 1, vending_machine.stocks['コーラ'][:count]
+
+    vending_machine.insert_money(100)
+    vending_machine.insert_money(10)
+    vending_machine.sell('コーラ')
+
+    assert_equal 1, vending_machine.stocks['コーラ'][:count]
+  end
+
+  def test_ジュースの値段以下の金額を投入されると、売上金を増やさないこと
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    assert_equal 0, vending_machine.sales_amount
+
+    vending_machine.insert_money(100)
+    vending_machine.insert_money(10)
+    vending_machine.sell('コーラ')
+
+    assert_equal 0, vending_machine.sales_amount
+  end
 end
