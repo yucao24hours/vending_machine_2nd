@@ -36,6 +36,8 @@ class VendingMachine
     end
   end
 
+  private
+
   def can_buy?(drink_name)
     return false unless stocks
 
