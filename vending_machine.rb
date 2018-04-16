@@ -30,6 +30,12 @@ class VendingMachine
     change
   end
 
+  def sell(drink_name)
+    if can_buy?(drink_name)
+      stocks[drink_name][:count] -= 1
+    end
+  end
+
   def can_buy?(drink_name)
     return false unless stocks
 

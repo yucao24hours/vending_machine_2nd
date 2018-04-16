@@ -83,4 +83,16 @@ class VendingMachineTest < Minitest::Test
 
     refute vending_machine.can_buy?('コーラ')
   end
+
+  def test_ジュースの値段以上の金額を投入されると、販売したとしてジュースの在庫を減らすこと
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    assert_equal 1, vending_machine.stocks['コーラ'][:count]
+
+    vending_machine.insert_money(100)
+    vending_machine.insert_money(10)
+    vending_machine.insert_money(10)
+    vending_machine.sell('コーラ')
+
+    assert_equal 0, vending_machine.stocks['コーラ'][:count]
+  end
 end
