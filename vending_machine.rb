@@ -3,7 +3,7 @@ require "pry"
 class VendingMachine
   ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000].freeze
 
-  attr_reader :stocks, :total_money_amount
+  attr_reader :stocks, :total_money_amount, :sales_amount
 
   def initialize(stocks: nil)
     @total_money_amount = 0
@@ -15,6 +15,7 @@ class VendingMachine
     # }
     # のようなハッシュでもってみる
     @stocks = stocks
+    @sales_amount = 0
   end
 
   def insert_money(money)
@@ -32,7 +33,8 @@ class VendingMachine
 
   def sell(drink_name)
     if can_buy?(drink_name)
-      stocks[drink_name][:count] -= 1
+      @stocks[drink_name][:count] -= 1
+      @sales_amount += @stocks[drink_name][:price]
     end
   end
 
