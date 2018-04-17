@@ -3,6 +3,9 @@ require "pry"
 class VendingMachine
   ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000].freeze
 
+  # stocks: 現在の在庫
+  # total_money_amount: 現在の投入金額合計
+  # sales_amount: 売上金額合計
   attr_reader :stocks, :total_money_amount, :sales_amount
 
   def initialize(stocks: nil)
