@@ -106,4 +106,14 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal 0, vending_machine.sales_amount
   end
+
+  def test_払い戻しをすると投入金額から購入金額を引いた残りが返される
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+
+    vending_machine.insert_money(100)
+    vending_machine.insert_money(100)
+    vending_machine.sell('コーラ')
+
+    assert_equal 80, vending_machine.refund
+  end
 end

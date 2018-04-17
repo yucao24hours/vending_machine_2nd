@@ -35,6 +35,7 @@ class VendingMachine
     if can_buy?(drink_name)
       @stocks[drink_name][:count] -= 1
       @sales_amount += @stocks[drink_name][:price]
+      @total_money_amount -= @stocks[drink_name][:price]
     end
   end
 
