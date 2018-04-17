@@ -51,7 +51,7 @@ class VendingMachineTest < Minitest::Test
     @vending_machine.insert_money(500)
     @vending_machine.insert_money(100)
 
-    assert_equal 1_600, @vending_machine.refund, 1_600
+    assert_equal 1_600, @vending_machine.refund
     assert_equal 0, @vending_machine.total_money_amount
   end
 
