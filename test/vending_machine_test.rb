@@ -7,6 +7,10 @@ class VendingMachineTest < Minitest::Test
     @vending_machine = VendingMachine.new
   end
 
+  def test_初期状態では総売上金額は0円になっていること
+    assert_equal 0, @vending_machine.sales_amount
+  end
+
   def test_初期状態でコーラを5つ格納できる
     vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
     assert_equal 5, vending_machine.stocks['コーラ'][:count]
@@ -75,7 +79,6 @@ class VendingMachineTest < Minitest::Test
 
   def test_ジュースの値段以上の金額を投入されると、販売したとして売上金を増やすこと
     vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
-    assert_equal 0, vending_machine.sales_amount
 
     vending_machine.insert_money(100)
     vending_machine.insert_money(10)
@@ -98,7 +101,6 @@ class VendingMachineTest < Minitest::Test
 
   def test_ジュースの値段以下の金額を投入されると、売上金を増やさないこと
     vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
-    assert_equal 0, vending_machine.sales_amount
 
     vending_machine.insert_money(100)
     vending_machine.insert_money(10)
