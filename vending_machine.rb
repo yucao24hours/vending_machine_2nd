@@ -9,7 +9,7 @@ class VendingMachine
   attr_reader :total_money_amount, :sales_amount
   attr_writer :stocks
 
-  def initialize(stocks: nil)
+  def initialize(stocks: {})
     @total_money_amount = 0
     # stocsk は
     # {
