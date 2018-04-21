@@ -6,7 +6,8 @@ class VendingMachine
   # stocks: 現在の在庫
   # total_money_amount: 現在の投入金額合計
   # sales_amount: 売上金額合計
-  attr_reader :stocks, :total_money_amount, :sales_amount
+  attr_reader :total_money_amount, :sales_amount
+  attr_writer :stocks
 
   def initialize(stocks: nil)
     @total_money_amount = 0
@@ -17,8 +18,12 @@ class VendingMachine
     #   {'エナジードリンク' => {price: 200, count: 4}}
     # }
     # のようなハッシュでもってみる
-    @stocks = stocks
+    @stocks = stocks.dup
     @sales_amount = 0
+  end
+
+  def stocks
+    @stocks.dup
   end
 
   def insert_money(money)
