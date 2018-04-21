@@ -3,9 +3,13 @@ require "pry"
 class VendingMachine
   ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000].freeze
 
-  attr_reader :stocks, :total_money_amount
+  # stocks: 現在の在庫
+  # total_money_amount: 現在の投入金額合計
+  # sales_amount: 売上金額合計
+  attr_reader :total_money_amount, :sales_amount
+  attr_writer :stocks
 
-  def initialize(stocks: nil)
+  def initialize(stocks: {})
     @total_money_amount = 0
     # stocsk は
     # {
@@ -14,7 +18,12 @@ class VendingMachine
     #   {'エナジードリンク' => {price: 200, count: 4}}
     # }
     # のようなハッシュでもってみる
-    @stocks = stocks
+    @stocks = stocks.dup
+    @sales_amount = 0
+  end
+
+  def stocks
+    @stocks.dup
   end
 
   def insert_money(money)
@@ -28,5 +37,24 @@ class VendingMachine
     @total_money_amount = 0
 
     change
+  end
+
+  def sell(drink_name)
+    if can_buy?(drink_name)
+      @stocks[drink_name][:count] -= 1
+      @sales_amount += @stocks[drink_name][:price]
+      @total_money_amount -= @stocks[drink_name][:price]
+    end
+  end
+
+  private
+
+  def can_buy?(drink_name)
+    return false unless @stocks
+
+    price = @stocks[drink_name][:price]
+    count = @stocks[drink_name][:count]
+
+    (total_money_amount >= price) && (count >= 1)
   end
 end
