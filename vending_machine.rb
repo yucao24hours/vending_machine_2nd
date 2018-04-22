@@ -47,6 +47,10 @@ class VendingMachine
     end
   end
 
+  def add_stock(drink)
+    @stocks = @stocks.merge(drink)
+  end
+
   private
 
   def can_buy?(drink_name)
