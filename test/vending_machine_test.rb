@@ -123,7 +123,9 @@ class VendingMachineTest < Minitest::Test
     vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
 
     vending_machine.add_stock({'レッドブル' => {price: 200, count: 5}})
+    vending_machine.add_stock({'水' => {price: 100, count: 5}})
 
     assert_equal 5, vending_machine.stocks['レッドブル'][:count]
+    assert_equal 5, vending_machine.stocks['水'][:count]
   end
 end
