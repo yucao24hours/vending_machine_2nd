@@ -118,4 +118,12 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal 80, vending_machine.refund
   end
+
+  def test_在庫を追加できる
+    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+
+    vending_machine.add_stock({'レッドブル' => {price: 200, count: 5}})
+
+    assert_equal 5, vending_machine.stocks['レッドブル'][:count]
+  end
 end
