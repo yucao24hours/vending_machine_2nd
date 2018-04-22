@@ -117,4 +117,12 @@ class VendingMachineTest < Minitest::Test
     assert_equal 5, @vending_machine.stocks['レッドブル'][:count]
     assert_equal 5, @vending_machine.stocks['水'][:count]
   end
+
+  def test_投入金額、在庫の点で購入可能なドリンクのリストを取得できる
+    @vending_machine.add_stock({'水' => {price: 100, count: 1}})
+
+    @vending_machine.insert_money(100)
+
+    assert_equal ['水'], @vending_machine.buyable_drinks
+  end
 end
