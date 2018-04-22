@@ -52,7 +52,10 @@ class VendingMachine
   end
 
   def buyable_drinks
-    ['水']
+    # XXX インデックスでアクセスするのがダサいしわかりづらく感じる
+    @stocks.each_with_object([]) do |drink, memo|
+      memo << drink[0] if drink[1][:price] <= @total_money_amount
+    end
   end
 
   private
