@@ -125,4 +125,12 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal ['水'], @vending_machine.buyable_drinks
   end
+
+  def test_ジュース値段以上の投入金額が投入されている条件下で購入操作を行うと、釣り銭（投入金額とジュース値段の差分）を出力する
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+
+    assert_equal 0, @vending_machine.sell('コーラ')
+  end
 end
