@@ -4,16 +4,15 @@ require_relative "../vending_machine"
 
 class VendingMachineTest < Minitest::Test
   def setup
-    @vending_machine = VendingMachine.new
+    @vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
   end
 
   def test_初期状態では総売上金額は0円になっていること
     assert_equal 0, @vending_machine.sales_amount
   end
 
-  def test_初期状態でコーラを5つ格納できる
-    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
-    assert_equal 5, vending_machine.stocks['コーラ'][:count]
+  def test_初期状態でコーラを5つ格納していること
+    assert_equal 5, @vending_machine.stocks['コーラ'][:count]
   end
 
   def test_許容されていない金種が投入されたら釣り銭として返すこと
@@ -60,9 +59,7 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_格納されているジュースの情報を取得できる
-    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 5}})
-
-    assert_equal ({"コーラ" => {price: 120, count: 5}}), vending_machine.stocks
+    assert_equal ({"コーラ" => {price: 120, count: 5}}), @vending_machine.stocks
   end
 
   def test_ジュースの値段以上の金額を投入されると、販売したとしてジュースの在庫を減らすこと
@@ -78,14 +75,12 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_ジュースの値段以上の金額を投入されると、販売したとして売上金を増やすこと
-    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+    @vending_machine.sell('コーラ')
 
-    vending_machine.insert_money(100)
-    vending_machine.insert_money(10)
-    vending_machine.insert_money(10)
-    vending_machine.sell('コーラ')
-
-    assert_equal 120, vending_machine.sales_amount
+    assert_equal 120, @vending_machine.sales_amount
   end
 
   def test_ジュースの値段以下の金額を投入されると、ジュースの在庫を減らさないこと
@@ -100,22 +95,34 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_ジュースの値段以下の金額を投入されると、売上金を増やさないこと
-    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(10)
+    @vending_machine.sell('コーラ')
 
-    vending_machine.insert_money(100)
-    vending_machine.insert_money(10)
-    vending_machine.sell('コーラ')
-
-    assert_equal 0, vending_machine.sales_amount
+    assert_equal 0, @vending_machine.sales_amount
   end
 
   def test_払い戻しをすると投入金額から購入金額を引いた残りが返される
-    vending_machine = VendingMachine.new(stocks: {'コーラ' => {price: 120, count: 1}})
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(100)
+    @vending_machine.sell('コーラ')
 
-    vending_machine.insert_money(100)
-    vending_machine.insert_money(100)
-    vending_machine.sell('コーラ')
+    assert_equal 80, @vending_machine.refund
+  end
 
-    assert_equal 80, vending_machine.refund
+  def test_在庫を追加できる
+    @vending_machine.add_stock({'レッドブル' => {price: 200, count: 5}})
+    @vending_machine.add_stock({'水' => {price: 100, count: 5}})
+
+    assert_equal 5, @vending_machine.stocks['レッドブル'][:count]
+    assert_equal 5, @vending_machine.stocks['水'][:count]
+  end
+
+  def test_投入金額、在庫の点で購入可能なドリンクのリストを取得できる
+    @vending_machine.add_stock({'水' => {price: 100, count: 1}})
+
+    @vending_machine.insert_money(100)
+
+    assert_equal ['水'], @vending_machine.buyable_drinks
   end
 end

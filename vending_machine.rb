@@ -47,6 +47,17 @@ class VendingMachine
     end
   end
 
+  def add_stock(drink)
+    @stocks = @stocks.merge(drink)
+  end
+
+  def buyable_drinks
+    # XXX インデックスでアクセスするのがダサいしわかりづらく感じる
+    @stocks.each_with_object([]) do |drink, memo|
+      memo << drink[0] if drink[1][:price] <= @total_money_amount
+    end
+  end
+
   private
 
   def can_buy?(drink_name)
