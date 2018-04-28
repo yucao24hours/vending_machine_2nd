@@ -7,7 +7,7 @@ class VendingMachine
   # stocks: 現在の在庫
   # total_money_amount: 現在の投入金額合計
   # sales_amount: 売上金額合計
-  attr_reader :total_money_amount, :sales_amount
+  attr_reader :total_money_amount, :sales_amount, :change_stock
   attr_writer :stocks
 
   def initialize(stocks: {})
@@ -68,10 +68,6 @@ class VendingMachine
     @stocks.each_with_object([]) do |drink, memo|
       memo << drink[0] if drink[1][:price] <= @total_money_amount
     end
-  end
-
-  def change_stock
-    @change_stock
   end
 
   private
