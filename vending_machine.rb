@@ -20,6 +20,7 @@ class VendingMachine
     # のようなハッシュでもってみる
     @stocks = stocks.dup
     @sales_amount = 0
+    @change_stock = {'10' => 10}
   end
 
   def stocks
@@ -61,7 +62,7 @@ class VendingMachine
   end
 
   def change_stock
-    {'10' => 10}
+    @change_stock
   end
 
   private
