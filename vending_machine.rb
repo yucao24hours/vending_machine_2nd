@@ -60,6 +60,10 @@ class VendingMachine
     end
   end
 
+  def change_stock
+    {'10' => 10}
+  end
+
   private
 
   def can_buy?(drink_name)
