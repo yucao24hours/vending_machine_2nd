@@ -2,6 +2,7 @@ require "pry"
 
 class VendingMachine
   ACCEPTABLE_MONEY = [10, 50, 100, 500, 1_000].freeze
+  CHANGE_STOCK_COUNT = 10
 
   # stocks: 現在の在庫
   # total_money_amount: 現在の投入金額合計
@@ -20,7 +21,15 @@ class VendingMachine
     # のようなハッシュでもってみる
     @stocks = stocks.dup
     @sales_amount = 0
-    @change_stock = {'10' => 10}
+    # change_stock は、金種をキー、枚数を値として持つハッシュ。
+    # {
+    #   '10' => 10,
+    #   '50' => 10,
+    #   ...
+    # }
+    @change_stock = ACCEPTABLE_MONEY.each_with_object({}) do |money, memo|
+      memo[money.to_s] = CHANGE_STOCK_COUNT
+    end
   end
 
   def stocks
