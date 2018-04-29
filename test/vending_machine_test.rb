@@ -133,4 +133,12 @@ class VendingMachineTest < Minitest::Test
 
     assert_equal 0, @vending_machine.sell('コーラ')
   end
+
+  def test_釣り銭ストックとして、有効なお札と硬貨10枚ずつを保持すること
+    assert_equal 10, @vending_machine.change_stock['10']
+    assert_equal 10, @vending_machine.change_stock['50']
+    assert_equal 10, @vending_machine.change_stock['100']
+    assert_equal 10, @vending_machine.change_stock['500']
+    assert_equal 10, @vending_machine.change_stock['1000']
+  end
 end
