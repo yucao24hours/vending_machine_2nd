@@ -143,11 +143,13 @@ class VendingMachineTest < Minitest::Test
   end
 
   def test_釣り銭ストックは大きい金種から使われること
-    @vending_machine.insert_money(100)
-    @vending_machine.insert_money(100)
-
+    @vending_machine.insert_money(1000)
     @vending_machine.sell('コーラ')
 
+    @vending_machine.refund
+
+    assert_equal 9, @vending_machine.change_stock['500']
+    assert_equal 7, @vending_machine.change_stock['100']
     assert_equal 9, @vending_machine.change_stock['50']
     assert_equal 7, @vending_machine.change_stock['10']
   end
