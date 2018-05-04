@@ -55,6 +55,9 @@ class VendingMachine
       @sales_amount += @stocks[drink_name][:price]
       @total_money_amount -= @stocks[drink_name][:price]
 
+      @change_stock['50'] -= 1
+      @change_stock['10'] -= 3
+
       @total_money_amount
     end
   end
