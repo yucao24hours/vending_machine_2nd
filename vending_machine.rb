@@ -91,7 +91,7 @@ class VendingMachine
     @change_stock[acceptable_money.to_s] -= 1
     @total_money_amount -= acceptable_money
 
-    reduce_change_stock_of(acceptable_money) if @total_money_amount >= acceptable_money
+    reduce_change_stock_of(acceptable_money) \
+      if @total_money_amount >= acceptable_money && @change_stock[acceptable_money.to_s] > 0
   end
-
 end
