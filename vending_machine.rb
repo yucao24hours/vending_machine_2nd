@@ -54,12 +54,30 @@ class VendingMachine
       @stocks[drink_name][:count] -= 1
       @sales_amount += @stocks[drink_name][:price]
       @total_money_amount -= @stocks[drink_name][:price]
+      change = @total_money_amount
 
-      @change_stock['50'] -= 1
-      @change_stock['10'] -= 3
+      # おつりを発行する必要がある場合（すなわち現在投入し保持しているおかねの金額がゼロでない場合）、
+      # そのおつり金額について、
+      # 許容されている金種でより大きい方から順に、
+      # おつり金額より小さいか？を判定していく。もし小さければ、その金種の釣り銭ストックの数を減らし、
+      # あまったおつり金額をまた同じように、許容されている金種でより大きいほうから順に判定していく。
+      if @total_money_amount != 0
+        ACCEPTABLE_MONEY.sort{|elem1, elem2| elem2 <=> elem1 }.each do |acceptable_money|
+          if @total_money_amount >= acceptable_money
+            reduce_change_stock_of(acceptable_money)
+          end
+        end
+      end
 
-      @total_money_amount
+      change
     end
+  end
+
+  def reduce_change_stock_of(acceptable_money)
+    @change_stock[acceptable_money.to_s] -= 1
+    @total_money_amount -= acceptable_money
+
+    reduce_change_stock_of(acceptable_money) if @total_money_amount >= acceptable_money
   end
 
   def add_stock(drink)
