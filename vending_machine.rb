@@ -11,7 +11,7 @@ class VendingMachine
   attr_writer :stocks
 
   def initialize(stocks: {})
-    @total_money_amount = 0
+    @total_money_amount = {"10" => 0, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}
     # stocsk は
     # {
     #   {'コーラ' => {price: 120, count: 5}},
@@ -39,11 +39,17 @@ class VendingMachine
   def insert_money(money)
     return money unless ACCEPTABLE_MONEY.include?(money)
 
-    @total_money_amount += money
+    @total_money_amount[money.to_s] += 1
+  end
+
+  def change_amount
+    @total_money_amount.inject(0) do |memo, money|
+      memo + (money[0].to_i * money[1])
+    end
   end
 
   def refund
-    change = @total_money_amount
+    change = change_amount
 
     if @total_money_amount != 0
       ACCEPTABLE_MONEY.sort{|elem1, elem2| elem2 <=> elem1 }.each do |acceptable_money|
