@@ -46,7 +46,7 @@ class VendingMachineTest < Minitest::Test
     @vending_machine.insert_money(100)
     @vending_machine.insert_money(50)
 
-    assert_equal 150, @vending_machine.change_amount
+    assert_equal 150, @vending_machine.total_money_amount
   end
 
   def test_投入金額の総計を釣り銭として出力すること

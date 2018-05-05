@@ -5,13 +5,13 @@ class VendingMachine
   CHANGE_STOCK_COUNT = 10
 
   # stocks: 現在の在庫
-  # total_money_amount: 現在の投入金額合計
+  # total_money: 現在の投入金種
   # sales_amount: 売上金額合計
-  attr_reader :total_money_amount, :sales_amount, :change_stock
+  attr_reader :total_money, :sales_amount, :change_stock
   attr_writer :stocks
 
   def initialize(stocks: {})
-    @total_money_amount = {"10" => 0, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}
+    @total_money = {"10" => 0, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}
     # stocsk は
     # {
     #   {'コーラ' => {price: 120, count: 5}},
@@ -39,11 +39,11 @@ class VendingMachine
   def insert_money(money)
     return money unless ACCEPTABLE_MONEY.include?(money)
 
-    @total_money_amount[money.to_s] += 1
+    @total_money[money.to_s] += 1
   end
 
-  def change_amount
-    @total_money_amount.inject(0) do |memo, money|
+  def total_money_amount
+    @total_money.inject(0) do |memo, money|
       memo + (money[0].to_i * money[1])
     end
   end
@@ -51,9 +51,9 @@ class VendingMachine
   def refund
     change = change_amount
 
-    if @total_money_amount != 0
+    if @total_money != 0
       ACCEPTABLE_MONEY.sort{|elem1, elem2| elem2 <=> elem1 }.each do |acceptable_money|
-        if @total_money_amount >= acceptable_money
+        if @total_money >= acceptable_money
           reduce_change_stock_of(acceptable_money)
         end
       end
@@ -66,8 +66,8 @@ class VendingMachine
     if can_buy?(drink_name)
       @stocks[drink_name][:count] -= 1
       @sales_amount += @stocks[drink_name][:price]
-      @total_money_amount -= @stocks[drink_name][:price]
-      @total_money_amount
+      @total_money -= @stocks[drink_name][:price]
+      @total_money
     end
   end
 
@@ -78,7 +78,7 @@ class VendingMachine
   def buyable_drinks
     # XXX インデックスでアクセスするのがダサいしわかりづらく感じる
     @stocks.each_with_object([]) do |drink, memo|
-      memo << drink[0] if drink[1][:price] <= @total_money_amount
+      memo << drink[0] if drink[1][:price] <= @total_money
     end
   end
 
@@ -90,14 +90,14 @@ class VendingMachine
     price = @stocks[drink_name][:price]
     count = @stocks[drink_name][:count]
 
-    (total_money_amount >= price) && (count >= 1)
+    (total_money >= price) && (count >= 1)
   end
 
   def reduce_change_stock_of(acceptable_money)
     @change_stock[acceptable_money.to_s] -= 1
-    @total_money_amount -= acceptable_money
+    @total_money -= acceptable_money
 
     reduce_change_stock_of(acceptable_money) \
-      if @total_money_amount >= acceptable_money && @change_stock[acceptable_money.to_s] > 0
+      if @total_money >= acceptable_money && @change_stock[acceptable_money.to_s] > 0
   end
 end
