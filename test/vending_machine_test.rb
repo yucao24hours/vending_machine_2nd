@@ -173,11 +173,14 @@ class VendingMachineTest < Minitest::Test
     assert_equal 1, @vending_machine.change_stock['50']
   end
 
-  # def test_投入したお金も釣り銭ストックに加えられること
-  #   @vending_machine.insert_money(100)
-  #   @vending_machine.insert_money(100)
-  #   @vending_machine.sell('コーラ')
+  def test_投入したお金も釣り銭ストックに加えられること
+    # 120 円のコーラを買うのにわざと 130 円入れる
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+    @vending_machine.sell('コーラ')
 
-  #   assert_equal 12, @vending_machine.change_stock['100']
-  # end
+    assert_equal 12, @vending_machine.change_stock['10']
+  end
 end
