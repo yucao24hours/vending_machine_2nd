@@ -49,7 +49,15 @@ class VendingMachine
   end
 
   def refund
-    change = change_amount
+    change = total_money_amount
+
+    # total_money 分だけ
+    # change_stock を増やさないとならない。
+    # （total_money はただの金額のメモで、お金の一時保管所ではない）
+    # 今の insert の方法だと金額しかとってなくて、
+    # 何円玉を何枚、っていうのはわからないので
+    # 10 * 10 で 100 円か、100 * 1 で 100 円なのかがわからない。
+    # そうなると、total_money も金種ごとにもたないとだめかも
 
     if @total_money != 0
       ACCEPTABLE_MONEY.sort{|elem1, elem2| elem2 <=> elem1 }.each do |acceptable_money|
@@ -64,10 +72,17 @@ class VendingMachine
 
   def sell(drink_name)
     if can_buy?(drink_name)
+      drink_price = @stocks[drink_name][:price].dup
+
       @stocks[drink_name][:count] -= 1
-      @sales_amount += @stocks[drink_name][:price]
-      @total_money -= @stocks[drink_name][:price]
-      @total_money
+      @sales_amount += drink_price
+      ACCEPTABLE_MONEY.sort{|elem1, elem2| elem2 <=> elem1 }.each do |acceptable_money|
+        if drink_price >= acceptable_money
+          reduce_total_money(acceptable_money, drink_price)
+        end
+      end
+
+      total_money_amount
     end
   end
 
@@ -90,7 +105,15 @@ class VendingMachine
     price = @stocks[drink_name][:price]
     count = @stocks[drink_name][:count]
 
-    (total_money >= price) && (count >= 1)
+    (total_money_amount >= price) && (count >= 1)
+  end
+
+  def reduce_total_money(acceptable_money, drink_price)
+    @total_money[acceptable_money.to_s] -= 1
+    drink_price -= acceptable_money
+
+    reduce_total_money(acceptable_money, drink_price) \
+      if drink_price >= acceptable_money
   end
 
   def reduce_change_stock_of(acceptable_money)

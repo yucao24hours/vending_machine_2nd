@@ -27,19 +27,24 @@ class VendingMachineTest < Minitest::Test
 
   def test_許容された金種のみ投入できること
     @vending_machine.insert_money(10)
-    assert_equal 10, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(50)
-    assert_equal 60, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(100)
-    assert_equal 160, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(500)
-    assert_equal 660, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 1, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(1_000)
-    assert_equal 1_660, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 1, "1000" => 1}),
+                 @vending_machine.total_money
   end
 
   def test_投入金額の総計を取得できること
@@ -55,7 +60,8 @@ class VendingMachineTest < Minitest::Test
     @vending_machine.insert_money(100)
 
     assert_equal 1_600, @vending_machine.refund
-    assert_equal 0, @vending_machine.total_money_amount
+    assert_equal ({"10" => 0, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
   end
 
   def test_格納されているジュースの情報を取得できる
@@ -180,6 +186,7 @@ class VendingMachineTest < Minitest::Test
     @vending_machine.insert_money(10)
     @vending_machine.insert_money(10)
     @vending_machine.sell('コーラ')
+    @vending_machine.refund
 
     assert_equal 12, @vending_machine.change_stock['10']
   end
