@@ -27,19 +27,24 @@ class VendingMachineTest < Minitest::Test
 
   def test_許容された金種のみ投入できること
     @vending_machine.insert_money(10)
-    assert_equal 10, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(50)
-    assert_equal 60, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(100)
-    assert_equal 160, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(500)
-    assert_equal 660, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 1, "1000" => 0}),
+                 @vending_machine.total_money
 
     @vending_machine.insert_money(1_000)
-    assert_equal 1_660, @vending_machine.total_money_amount
+    assert_equal ({"10" => 1, "50" => 1, "100" => 1, "500" => 1, "1000" => 1}),
+                 @vending_machine.total_money
   end
 
   def test_投入金額の総計を取得できること
@@ -55,7 +60,8 @@ class VendingMachineTest < Minitest::Test
     @vending_machine.insert_money(100)
 
     assert_equal 1_600, @vending_machine.refund
-    assert_equal 0, @vending_machine.total_money_amount
+    assert_equal ({"10" => 0, "50" => 0, "100" => 0, "500" => 0, "1000" => 0}),
+                 @vending_machine.total_money
   end
 
   def test_格納されているジュースの情報を取得できる
@@ -140,5 +146,48 @@ class VendingMachineTest < Minitest::Test
     assert_equal 10, @vending_machine.change_stock['100']
     assert_equal 10, @vending_machine.change_stock['500']
     assert_equal 10, @vending_machine.change_stock['1000']
+  end
+
+  def test_釣り銭ストックは大きい金種から使われること
+    @vending_machine.insert_money(1000)
+    @vending_machine.sell('コーラ')
+
+    @vending_machine.refund
+
+    assert_equal 9, @vending_machine.change_stock['500']
+    assert_equal 7, @vending_machine.change_stock['100']
+    assert_equal 9, @vending_machine.change_stock['50']
+    assert_equal 7, @vending_machine.change_stock['10']
+  end
+
+  def test_ストックからなくなった硬貨は、他の硬貨で補うこと
+    @vending_machine.add_stock({'水' => {price: 100, count: 5}})
+
+    3.times do
+      @vending_machine.insert_money(1000)
+      @vending_machine.sell('コーラ')
+      @vending_machine.refund
+    end
+
+    # この時点で、釣り銭ストックは
+    # @change_stock={"10"=>1, "50"=>7, "100"=>1, "500"=>7, "1000"=>10}
+
+    @vending_machine.insert_money(1000)
+    @vending_machine.sell('水') # お釣りが 900 円発生する => 100 円玉が 3 枚足りない！ => 50 円玉を 6 枚使って補う
+    @vending_machine.refund
+
+    assert_equal 1, @vending_machine.change_stock['50']
+  end
+
+  def test_投入したお金も釣り銭ストックに加えられること
+    # 120 円のコーラを買うのにわざと 130 円入れる
+    @vending_machine.insert_money(100)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+    @vending_machine.insert_money(10)
+    @vending_machine.sell('コーラ')
+    @vending_machine.refund
+
+    assert_equal 12, @vending_machine.change_stock['10']
   end
 end
